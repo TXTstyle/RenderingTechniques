@@ -26,9 +26,9 @@ Texture Manager::LoadTexture(const char* file, bool alpha, std::string name) {
     return Textures[name];
 }
 
-TextureTileMap Manager::LoadTileMap(const char* file, bool alpha, uint32_t size, std::string name) {
+TextureTileMap Manager::LoadTileMap(const char* file, bool alpha, glm::vec2 size, std::string name) {
     TileMaps[name] = loadTextureFromFile(file, alpha, size);
-    //std::cout << TileMaps[name].texSize << std::endl;
+    //std::cout << TileMaps[name].GetID() << std::endl;
     return TileMaps[name];
 }
 
@@ -108,7 +108,7 @@ Texture Manager::loadTextureFromFile(const char* file, bool alpha) {
     return texture;
 }
 
-TextureTileMap Manager::loadTextureFromFile(const char* file, bool alpha, uint32_t size) {
+TextureTileMap Manager::loadTextureFromFile(const char* file, bool alpha, glm::vec2 size) {
     TextureTileMap texture;
     if (alpha)
     {
@@ -120,8 +120,9 @@ TextureTileMap Manager::loadTextureFromFile(const char* file, bool alpha, uint32
     stbi_set_flip_vertically_on_load(1);
     unsigned char* data = stbi_load(file, &width, &height, &BPP, 0);
 
-    texture.Generate(width, width/size, data);
-    //std::cout << texture.texSize << std::endl;
+    glm::vec2 sizeVec(width, height);
+    texture.Generate(sizeVec, sizeVec/size, data);
+    //std::cout << texture.size.x << std::endl;
     stbi_image_free(data);
     return texture;
 }

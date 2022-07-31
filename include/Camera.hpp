@@ -33,6 +33,7 @@ namespace Vision {
 
         glm::mat4& getProjMat();
         glm::mat4& getViewMat();
+        glm::vec3& getPos();
 
         void Controls();
     };

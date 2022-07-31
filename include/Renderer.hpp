@@ -48,12 +48,13 @@ namespace Vision{
         static void Flush();
 
         static void DrawQuad(const glm::vec3 p_pos, const glm::vec3 rot, const glm::vec2 size, const glm::vec4 color);
-        static void DrawQuad(const glm::vec3 p_pos, const glm::vec3 rot, const glm::vec2 size, std::string texName);
-        static void DrawQuad(const glm::vec3 p_pos, const glm::vec3 rot, const glm::vec2 size, const glm::vec2 tilePos, std::string texName);
+        static void DrawQuad(const glm::vec3 p_pos, const glm::vec3 rot, const glm::vec2 size, std::string texName, Material mat);
+        static void DrawQuad(const glm::vec3 p_pos, const glm::vec3 rot, const glm::vec2 size, const glm::vec2 tilePos, std::string texName, Material mat);
 
         static void Clear(const glm::vec3 color);
         static bool WindowShouldClose();
         static void EndEvents();
         static void InitEnable(const glm::vec2 p_windowSize, const std::string windowName);
+        static void SetWindowTitle(std::string title);
     };
 }

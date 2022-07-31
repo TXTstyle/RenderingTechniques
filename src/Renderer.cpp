@@ -36,16 +36,19 @@ void Renderer::Init() {
     glBufferData(GL_ARRAY_BUFFER, MaxVertexCount * sizeof(Vertex), nullptr, GL_DYNAMIC_DRAW);
 
     glEnableVertexArrayAttrib(Data.QuadVA, 0);
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Pos));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Pos));
     
     glEnableVertexArrayAttrib(Data.QuadVA, 1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexCoord));
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexCoord));
     
     glEnableVertexArrayAttrib(Data.QuadVA, 2);
-    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Color));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Normal));
     
     glEnableVertexArrayAttrib(Data.QuadVA, 3);
-    glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexID));
+    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Color));
+    
+    glEnableVertexArrayAttrib(Data.QuadVA, 4);
+    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Mat));
 
     uint32_t indices[MaxIndexCount];
     uint32_t offset = 0;
@@ -117,11 +120,12 @@ void Renderer::Flush() {
 /*
     4 Pos;
     2 TexCoord;
+    3 Normal;
     4 Color;
     1 TexID;
 */
 
-void GenOriVerts(const glm::vec3 rot, glm::vec2 sizeOffset, glm::vec3 p_pos, glm::vec4 *pos) {
+void GenOriVerts(const glm::vec3 rot, glm::vec2 sizeOffset, glm::vec3 p_pos, glm::vec4 *pos, glm::vec3 *nrm) {
     glm::mat4 model(1.0f);
     model = glm::rotate(model, glm::radians(rot.x), {1.0f, 0, 0});
     model = glm::rotate(model, glm::radians(rot.y), {0, 1.0f, 0});
@@ -131,6 +135,8 @@ void GenOriVerts(const glm::vec3 rot, glm::vec2 sizeOffset, glm::vec3 p_pos, glm
     pos[1] = model * glm::vec4( sizeOffset.x, -sizeOffset.y, 0.0f, 1.0f);
     pos[2] = model * glm::vec4( sizeOffset.x,  sizeOffset.y, 0.0f, 1.0f);
     pos[3] = model * glm::vec4(-sizeOffset.x,  sizeOffset.y, 0.0f, 1.0f);
+
+    *nrm = model * glm::vec4(0.0f, 0.0f, 1.0f, 0.0f);
 
     model = glm::translate(glm::mat4(1.0f), p_pos);
     pos[0] = model * pos[0];
@@ -147,40 +153,46 @@ void Renderer::DrawQuad(const glm::vec3 p_pos, const glm::vec3 rot, const glm::v
         StartBatch();
     }
 
-    float textureIndex = 0.0f;
+    Material textureIndex(0.0f, 32.0f);
+    textureIndex.diffuse = 0.0f;
     glm::vec2 sizeOffset = size/2.0f;
     glm::vec4 pos[4];
-    GenOriVerts(rot, sizeOffset, p_pos, pos);
+    glm::vec3 nrm(0.0f);
+    GenOriVerts(rot, sizeOffset, p_pos, pos, &nrm);
 
     Data.QuadBufferPtr->Pos = pos[0];
-    Data.QuadBufferPtr->TexCoord = glm::vec2(0.0f, 0.0f);
+    Data.QuadBufferPtr->TexCoord = glm::vec4(0.0f, 0.0f, size);
+    Data.QuadBufferPtr->Normal = nrm;
     Data.QuadBufferPtr->Color = color;
-    Data.QuadBufferPtr->TexID = textureIndex;
+    Data.QuadBufferPtr->Mat = textureIndex;
     Data.QuadBufferPtr++;
 
     Data.QuadBufferPtr->Pos = pos[1];
-    Data.QuadBufferPtr->TexCoord = glm::vec2(1.0f, 0.0f);
+    Data.QuadBufferPtr->TexCoord = glm::vec4(1.0f, 0.0f, size);
+    Data.QuadBufferPtr->Normal = nrm;
     Data.QuadBufferPtr->Color = color;
-    Data.QuadBufferPtr->TexID = textureIndex;
+    Data.QuadBufferPtr->Mat = textureIndex;
     Data.QuadBufferPtr++;
 
     Data.QuadBufferPtr->Pos = pos[2];
-    Data.QuadBufferPtr->TexCoord = glm::vec2(1.0f, 1.0f);
+    Data.QuadBufferPtr->TexCoord = glm::vec4(1.0f, 1.0f, size);
+    Data.QuadBufferPtr->Normal = nrm;
     Data.QuadBufferPtr->Color = color;
-    Data.QuadBufferPtr->TexID = textureIndex;
+    Data.QuadBufferPtr->Mat = textureIndex;
     Data.QuadBufferPtr++;
 
     Data.QuadBufferPtr->Pos = pos[3];
-    Data.QuadBufferPtr->TexCoord = glm::vec2(0.0f, 1.0f);
+    Data.QuadBufferPtr->TexCoord = glm::vec4(0.0f, 1.0f, size);
+    Data.QuadBufferPtr->Normal = nrm;
     Data.QuadBufferPtr->Color = color;
-    Data.QuadBufferPtr->TexID = textureIndex;
+    Data.QuadBufferPtr->Mat = textureIndex;
     Data.QuadBufferPtr++;
 
     Data.IndexCount += 6;
     
 }
 
-void Renderer::DrawQuad(const glm::vec3 p_pos, const glm::vec3 rot, const glm::vec2 size, std::string texName) {
+void Renderer::DrawQuad(const glm::vec3 p_pos, const glm::vec3 rot, const glm::vec2 size, std::string texName, Material Mat) {
     if (Data.IndexCount >= MaxIndexCount || Data.TexSlotIndex > 31)
     {
         EndBatch();
@@ -193,7 +205,10 @@ void Renderer::DrawQuad(const glm::vec3 p_pos, const glm::vec3 rot, const glm::v
     glm::vec4 color(1.0f);
     glm::vec2 sizeOffset = size/2.0f;
     glm::vec4 pos[4];
-    GenOriVerts(rot, sizeOffset, p_pos, pos);
+    glm::vec3 nrm(0.0f);
+    //Mat = Material(1.0f, 1.0f, 0.0f);
+    GenOriVerts(rot, sizeOffset, p_pos, pos, &nrm);
+    //std::cout << nrm.x << " " << nrm.y << " " << nrm.z << std::endl;
 
     float textureIndex = 0.0f;
     for (uint32_t i = 0; i < Data.TexSlotIndex; i++)
@@ -212,36 +227,40 @@ void Renderer::DrawQuad(const glm::vec3 p_pos, const glm::vec3 rot, const glm::v
         Data.TextureSlots[Data.TexSlotIndex] = texID;
         Data.TexSlotIndex++;
     }
-    
+    Mat.diffuse = textureIndex;
 
     Data.QuadBufferPtr->Pos = pos[0];
-    Data.QuadBufferPtr->TexCoord = glm::vec2(0.0f, 0.0f);
+    Data.QuadBufferPtr->TexCoord = glm::vec4(0.0f, 0.0f, size);
+    Data.QuadBufferPtr->Normal = nrm;
     Data.QuadBufferPtr->Color = color;
-    Data.QuadBufferPtr->TexID = textureIndex;
+    Data.QuadBufferPtr->Mat = Mat;
     Data.QuadBufferPtr++;
 
     Data.QuadBufferPtr->Pos = pos[1];
-    Data.QuadBufferPtr->TexCoord = glm::vec2(1.0f, 0.0f);
+    Data.QuadBufferPtr->TexCoord = glm::vec4(1.0f, 0.0f, size);
+    Data.QuadBufferPtr->Normal = nrm;
     Data.QuadBufferPtr->Color = color;
-    Data.QuadBufferPtr->TexID = textureIndex;
+    Data.QuadBufferPtr->Mat = Mat;
     Data.QuadBufferPtr++;
 
     Data.QuadBufferPtr->Pos = pos[2];
-    Data.QuadBufferPtr->TexCoord = glm::vec2(1.0f, 1.0f);
+    Data.QuadBufferPtr->TexCoord = glm::vec4(1.0f, 1.0f, size);
+    Data.QuadBufferPtr->Normal = nrm;
     Data.QuadBufferPtr->Color = color;
-    Data.QuadBufferPtr->TexID = textureIndex;
+    Data.QuadBufferPtr->Mat = Mat;
     Data.QuadBufferPtr++;
 
     Data.QuadBufferPtr->Pos = pos[3];
-    Data.QuadBufferPtr->TexCoord = glm::vec2(0.0f, 1.0f);
+    Data.QuadBufferPtr->TexCoord = glm::vec4(0.0f, 1.0f, size);
+    Data.QuadBufferPtr->Normal = nrm;
     Data.QuadBufferPtr->Color = color;
-    Data.QuadBufferPtr->TexID = textureIndex;
+    Data.QuadBufferPtr->Mat = Mat;
     Data.QuadBufferPtr++;
 
     Data.IndexCount += 6;
 }
 
-void Renderer::DrawQuad(const glm::vec3 p_pos, const glm::vec3 rot, const glm::vec2 size, glm::vec2 tilePos, std::string texName) {
+void Renderer::DrawQuad(const glm::vec3 p_pos, const glm::vec3 rot, const glm::vec2 size, glm::vec2 tilePos, std::string texName, Material Mat) {
     if (Data.IndexCount >= MaxIndexCount || Data.TexSlotIndex > 31)
     {
         EndBatch();
@@ -251,12 +270,16 @@ void Renderer::DrawQuad(const glm::vec3 p_pos, const glm::vec3 rot, const glm::v
 
     uint32_t texID = Vision::Manager::GetTileMap(texName).GetID();
     float texSize = Vision::Manager::GetTileMap(texName).GetTile();
-    glm::vec2 texPos(tilePos.x*texSize, tilePos.y*texSize);
+    float texRatio = Vision::Manager::GetTileMap(texName).GetRatio();
+    glm::vec4 texPos(tilePos.x*texSize, tilePos.y*texSize*texRatio, size);
+    //std::cout << texPos.x << " " << texPos.y << std::endl;
+    //std::cout << texSize << std::endl;
 
     glm::vec4 color(1.0f, 1.0f, 1.0f, 1.0f);
     glm::vec2 sizeOffset = size/2.0f;
     glm::vec4 pos[4];
-    GenOriVerts(rot, sizeOffset, p_pos, pos);
+    glm::vec3 nrm(0.0f);
+    GenOriVerts(rot, sizeOffset, p_pos, pos, &nrm);
 
     float textureIndex = 0.0f;
     for (uint32_t i = 0; i < Data.TexSlotIndex; i++)
@@ -275,30 +298,35 @@ void Renderer::DrawQuad(const glm::vec3 p_pos, const glm::vec3 rot, const glm::v
         Data.TextureSlots[Data.TexSlotIndex] = texID;
         Data.TexSlotIndex++;
     }
-    
+    Mat.diffuse = textureIndex;
+    //std::cout << Mat.diffuse << " " << Mat.specular << " " << Mat.shininess << std::endl;
 
     Data.QuadBufferPtr->Pos = pos[0];
     Data.QuadBufferPtr->TexCoord = texPos;
+    Data.QuadBufferPtr->Normal = nrm;
     Data.QuadBufferPtr->Color = color;
-    Data.QuadBufferPtr->TexID = textureIndex;
+    Data.QuadBufferPtr->Mat = Mat;
     Data.QuadBufferPtr++;
 
     Data.QuadBufferPtr->Pos = pos[1];
-    Data.QuadBufferPtr->TexCoord = texPos + glm::vec2(texSize, 0.0f);
+    Data.QuadBufferPtr->TexCoord = texPos + glm::vec4(texSize, 0.0f, 0.0f, 0.0f);
+    Data.QuadBufferPtr->Normal = nrm;
     Data.QuadBufferPtr->Color = color;
-    Data.QuadBufferPtr->TexID = textureIndex;
+    Data.QuadBufferPtr->Mat = Mat;
     Data.QuadBufferPtr++;
 
     Data.QuadBufferPtr->Pos = pos[2];
-    Data.QuadBufferPtr->TexCoord = texPos + glm::vec2(texSize);
+    Data.QuadBufferPtr->TexCoord = texPos + glm::vec4(texSize, texSize*texRatio, 0.0f, 0.0f);
+    Data.QuadBufferPtr->Normal = nrm;
     Data.QuadBufferPtr->Color = color;
-    Data.QuadBufferPtr->TexID = textureIndex;
+    Data.QuadBufferPtr->Mat = Mat;
     Data.QuadBufferPtr++;
 
     Data.QuadBufferPtr->Pos = pos[3];
-    Data.QuadBufferPtr->TexCoord = texPos + glm::vec2(0.0f, texSize);
+    Data.QuadBufferPtr->TexCoord = texPos + glm::vec4(0.0f, texSize*texRatio, 0.0f, 0.0f);
+    Data.QuadBufferPtr->Normal = nrm;
     Data.QuadBufferPtr->Color = color;
-    Data.QuadBufferPtr->TexID = textureIndex;
+    Data.QuadBufferPtr->Mat = Mat;
     Data.QuadBufferPtr++;
 
     Data.IndexCount += 6;
@@ -332,6 +360,7 @@ void Renderer::InitEnable(const glm::vec2 p_windowSize, const std::string window
         exit(-1);
     
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
+    //glfwWindowHint(GLFW_SAMPLES, 2);
 
     /* Create a windowed mode window and its OpenGL context */
     window = glfwCreateWindow(windowSize.x, windowSize.y, windowName.c_str(), NULL, NULL);
@@ -344,7 +373,7 @@ void Renderer::InitEnable(const glm::vec2 p_windowSize, const std::string window
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
 
-    glfwSwapInterval(1);
+    glfwSwapInterval(0);
 
     if (glewInit() != GLEW_OK)
         throw std::runtime_error("GLEW not OK!");
@@ -363,8 +392,14 @@ void Renderer::InitEnable(const glm::vec2 p_windowSize, const std::string window
 
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK); 
+    
+    //glEnable(GL_MULTISAMPLE);
 
     glfwSetScrollCallback(window, scrollCallback);
     glfwSetCursorPosCallback(window, mouseCallback);
     glfwSetFramebufferSizeCallback(window, frameSizeCallback);
+}
+
+void Renderer::SetWindowTitle(std::string title) {
+    glfwSetWindowTitle(window, title.c_str());
 }

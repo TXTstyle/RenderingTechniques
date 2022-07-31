@@ -105,24 +105,25 @@ struct vec3
     : x(p_x), y(p_y), z(p_z) {}
 };
 
-struct Vertex {
-    glm::vec4 Pos;
-    glm::vec2 TexCoord;
-    glm::vec4 Color;
-    float TexID;
+struct Material {
+    float diffuse;
+    float specular;
+    float shininess;
 
-    Vertex(glm::vec4 p_pos, glm::vec2 p_texCoord, glm::vec4 p_color, float p_texID)
-    : Pos(p_pos), TexCoord(p_texCoord), Color(p_color), TexID(p_texID) {}
-    Vertex() {}
+    Material(float tileWidth, float p_shininess) 
+    : specular(tileWidth), shininess(p_shininess) {}
+    Material() {}
 };
 
-struct Vertex2D {
-    glm::vec4 Pos;
-    glm::vec2 TexCoord;
+struct Vertex {
+    glm::vec3 Pos;
+    glm::vec4 TexCoord;
+    glm::vec3 Normal;
     glm::vec4 Color;
-    float TexID;
+    Material Mat;
 
-    Vertex2D(glm::vec4 p_pos, glm::vec2 p_texCoord, glm::vec4 p_color, float p_texID)
-    : Pos(p_pos), TexCoord(p_texCoord), Color(p_color), TexID(p_texID) {}
-    Vertex2D() {}
+    Vertex(glm::vec3 p_pos, glm::vec4 p_texCoord, glm::vec3 p_normal, 
+           glm::vec4 p_color, Material p_material)
+    : Pos(p_pos), TexCoord(p_texCoord), Normal(p_normal), Color(p_color), Mat(p_material) {}
+    Vertex() {}
 };

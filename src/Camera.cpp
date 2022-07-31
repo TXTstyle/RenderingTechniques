@@ -113,3 +113,7 @@ glm::mat4& Camera::getProjMat() {
 glm::mat4& Camera::getViewMat() {
     return viewMat;
 }
+
+glm::vec3& Camera::getPos() {
+    return camPos;
+}

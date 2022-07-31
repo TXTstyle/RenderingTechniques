@@ -8,14 +8,15 @@ namespace Vision
 {
     struct TextureTileMap : public Texture
     {
-        uint32_t size, tileSize;
-        float texSize;
+        glm::vec2 size, tileSize;
+        float texSize, ratio = 0.0f;
 
         using Texture::Texture;
 
         inline float& GetTile() { return texSize; }
+        inline float& GetRatio() { return ratio; }
 
-        void Generate(uint32_t size, uint32_t tileSize, unsigned char* data);
+        void Generate(glm::vec2 size, glm::vec2 tileSize, unsigned char* data);
 
     };
 } 

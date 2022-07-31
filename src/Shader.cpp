@@ -70,6 +70,12 @@ void Shader::SetVec4f(const std::string& name, glm::vec4 values, bool useShader)
         this->Use();
     glUniform4f(glGetUniformLocation(RenderID, name.c_str()), values.x, values.y, values.y, values.w);
 }
+void Shader::SetVec3f(const std::string& name, glm::vec3 values, bool useShader) {
+    if(useShader)
+        this->Use();
+    glUniform3f(glGetUniformLocation(RenderID, name.c_str()), values.r, values.g, values.b);
+    //glUniform3f(glGetUniformLocation(RenderID, name.c_str()), values.x, values.y, values.y);
+}
 void Shader::SetMat4f(const std::string& name, const glm::mat4& matrix, bool useShader) {
     if(useShader)
         this->Use();
@@ -93,6 +99,7 @@ void Shader::checkErrors(uint32_t object, std::string type) {
             glGetShaderInfoLog(object, 1024, NULL, infoLog);
             std::cout << "| ERROR::SHADER: Compile-time error: Type: " << type << "\n"
                 << infoLog << "\n------" << std::endl;
+            exit(1);
         }
     } else {
         glGetProgramiv(object, GL_LINK_STATUS, &success);
@@ -100,7 +107,7 @@ void Shader::checkErrors(uint32_t object, std::string type) {
             glGetProgramInfoLog(object, 1024, NULL, infoLog);
             std::cout << "| ERROR::SHADER: Link-time error: Type: " << type << "\n"
                 << infoLog << "\n------" << std::endl;
+            exit(1);
         }
     }
-    
 }

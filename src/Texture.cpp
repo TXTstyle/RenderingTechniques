@@ -2,12 +2,12 @@
 #include <GL/glew.h>
 #include <cstdint>
 #include "stb/stb_image.h"
+#include <iostream>
 
 using namespace Vision;
 
 Texture::Texture()
     : width(0), height(0), format(GL_RGB), imgFormat(GL_RGB), wrapS(GL_REPEAT), wrapT(GL_REPEAT), filterMin(GL_NEAREST), filterMax(GL_NEAREST) {
-        glGenTextures(1, &renderID);
 }
 
 void Texture::Bind() const{
@@ -18,6 +18,7 @@ void Texture::Generate(uint32_t width, uint32_t height, unsigned char* data) {
     this->width = width;
     this->height = height;
 
+    glGenTextures(1, &renderID);
     // Create Texture
     glBindTexture(GL_TEXTURE_2D, renderID);
     glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, imgFormat, GL_UNSIGNED_BYTE, data);
