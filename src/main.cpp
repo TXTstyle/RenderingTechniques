@@ -8,6 +8,8 @@
 #include <memory>
 #include <iostream>
 #include <sstream>
+#include <fstream>
+#include <bits/stdc++.h>
 
 #include "Math.hpp"
 #include "Renderer.hpp"
@@ -25,13 +27,12 @@ void AddLight(int i, glm::vec3 pos) {
 }
 
 void Main3D() {
-    Vision::Renderer::InitEnable({1920.0f, 1080.0f}, "Vision - --ms - --fps");
+    Vision::Renderer::InitEnable({1280.0f, 720.0f}, "Vision - --ms - --fps");
     Vision::Renderer::Init();
 
     Vision::Manager::LoadShader("res/shaders/Basic.vert", "res/shaders/Basic.frag", nullptr, "Basic");
     Vision::Manager::LoadTileMap("res/textures/Lamp_tile_texture.png", false, {2, 1}, "Lamp");
     Vision::Manager::LoadTileMap("res/textures/Grass_texture_tile.png", false, {2, 1}, "Grass");
-    Vision::Manager::LoadTexture("res/textures/Rose_texture.png", true, "Rose");
     Vision::Manager::GetShader("Basic").SetIntArrayInit("u_Textures", true);
 
     glm::vec3 BG(0.53f, 0.81f, 0.94f);
@@ -65,6 +66,16 @@ void Main3D() {
     AddLight(10, {0.0f, 1.0f, 11.0f});
     AddLight(11, {6.0f, 1.0f, 11.0f});
 
+    std::time_t time;
+    time = std::time(NULL);
+    tm* localTime = localtime(&time);
+
+    std::stringstream ss;
+    ss << time << ".csv";
+    std::string fileName = ss.str();
+    std::ofstream outputFile(fileName);
+    outputFile << "type,time,frames" << std::endl;
+
     while (!Vision::Renderer::WindowShouldClose())
     {
         double currentFrame = glfwGetTime();
@@ -72,8 +83,9 @@ void Main3D() {
         if(currentFrame - lastFrame >= 1.0f) {
             double time = 1000.0/(double)frames;
             std::stringstream ss;
-            ss << "Vision - " << time << "ms - " << frames << "fps";
+            ss << "For,"<< time << "," << frames;
             Vision::Renderer::SetWindowTitle(ss.str());
+            outputFile << ss.str() << std::endl;
             frames = 0;
             lastFrame += 1.0f;
         }
@@ -95,7 +107,6 @@ void Main3D() {
         Vision::Renderer::StartBatch();
 
         
-        Vision::Renderer::DrawQuad({0, 1.0f, 0.0f} , {0,0,0}, {1, 1}, "Rose", Material(0.0f, 32.0f));
         /*
         Vision::Renderer::DrawQuad({0, -0.5f, 0} , {90,0,0}, {1, 1},  "Grass");
         Vision::Renderer::DrawQuad({-0.5f, 0.0f, 0}, {0,-90,0}, {1, 1},  "Grass");
@@ -127,6 +138,7 @@ void Main3D() {
         Vision::Renderer::EndEvents();
     }
     
+    outputFile.close();
     Vision::Manager::Clear();
     Vision::Renderer::Shutdown();
 }

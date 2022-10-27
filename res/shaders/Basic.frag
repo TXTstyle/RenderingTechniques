@@ -52,7 +52,7 @@ vec3 CalcPointLight(PointLight Light, vec3 normal, vec3 fragPos, vec3 viewDir, v
     float Distance = length(Light.pos - fragPos);
     float Str = 1 - 0.1*Distance;
     if(Str < 0.0)
-        return vec3(0.0, 0.0, 0.0);
+        return vec3(0.0);
     //Str = clamp(Str, 0.0, 1.0);
     //float Str = 1.0;
     float attenuation = 1.0 / (Light.con + Light.lin * Distance + 
@@ -85,7 +85,7 @@ void main() {
     vec3 viewDir = normalize(u_viewPos - v_FragPos);
     vec3 norm = normalize(v_Normal);
 
-    vec3 result;
+    vec3 result = vec3(0.0);
 
     //result += CalcDirLight(u_DirLight, norm, viewDir, texColor.rgb, specStr);
     for(int i = 0; i < LightNum; i++)
