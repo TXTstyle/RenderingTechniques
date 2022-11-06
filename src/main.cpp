@@ -43,11 +43,11 @@ void QuadInit(uint32_t& quadVAO, uint32_t& quadVBO) {
 }
 
 void AddLight(int i, glm::vec3 pos) {
-    Vision::Manager::GetShader("Basic").SetVec3f(std::string("u_PointLights[].pos")  .insert(14, std::to_string(i)), pos, true);
-    Vision::Manager::GetShader("Basic").SetVec3f(std::string("u_PointLights[].color").insert(14, std::to_string(i)), {1.0f, 1.0f, 1.0f}, true);
-    Vision::Manager::GetShader("Basic").SetFloat(std::string("u_PointLights[].con")  .insert(14, std::to_string(i)), 1.0f);
-    Vision::Manager::GetShader("Basic").SetFloat(std::string("u_PointLights[].lin")  .insert(14, std::to_string(i)), 0.09f);
-    Vision::Manager::GetShader("Basic").SetFloat(std::string("u_PointLights[].quad") .insert(14, std::to_string(i)), 0.032f);
+    Vision::Manager::GetShader("Screen").SetVec3f(std::string("u_PointLights[].pos")  .insert(14, std::to_string(i)), pos, true);
+    Vision::Manager::GetShader("Screen").SetVec3f(std::string("u_PointLights[].color").insert(14, std::to_string(i)), {1.0f, 1.0f, 1.0f}, true);
+    Vision::Manager::GetShader("Screen").SetFloat(std::string("u_PointLights[].con")  .insert(14, std::to_string(i)), 1.0f);
+    Vision::Manager::GetShader("Screen").SetFloat(std::string("u_PointLights[].lin")  .insert(14, std::to_string(i)), 0.09f);
+    Vision::Manager::GetShader("Screen").SetFloat(std::string("u_PointLights[].quad") .insert(14, std::to_string(i)), 0.032f);
 }
 
 void Main3D() {
@@ -56,21 +56,26 @@ void Main3D() {
 
     Vision::Manager::LoadShader("res/shaders/Basic.vert", "res/shaders/Basic.frag", nullptr, "Basic");
     
-    Vision::Manager::LoadShader("res/shaders/Gbuff.vert", "res/shaders/Gbuff.frag", nullptr, "Gbuff");
-    Vision::Manager::LoadShader("res/shaders/Def.vert", "res/shaders/Def.frag", nullptr, "Def");
+    //Vision::Manager::LoadShader("res/shaders/Gbuff.vert", "res/shaders/Gbuff.frag", nullptr, "Gbuff");
+    //Vision::Manager::LoadShader("res/shaders/Def.vert", "res/shaders/Def.frag", nullptr, "Def");
     
+    glm::vec3 BG(0.53f, 0.81f, 0.94f);
     Vision::Manager::LoadShader("res/shaders/Screen.vert", "res/shaders/Screen.frag", nullptr, "Screen");
 
     Vision::Manager::LoadTileMap("res/textures/Lamp_tile_texture.png", false, {2, 1}, "Lamp");
     Vision::Manager::LoadTileMap("res/textures/Grass_texture_tile.png", false, {2, 1}, "Grass");
-    Vision::Manager::GetShader("Screen").SetInt("screenTexture", 0, true);
+    Vision::Manager::GetShader("Screen").SetInt("gPosition", 0, true);
+    Vision::Manager::GetShader("Screen").SetInt("gNormal", 1);
+    Vision::Manager::GetShader("Screen").SetInt("gAlbedoSpec", 2);
+    Vision::Manager::GetShader("Screen").SetVec3f("u_DirLight.color", {1.0f, 1.0f, 1.0f}, true);
+    Vision::Manager::GetShader("Screen").SetInt("LightNum", 12, true);
+    
     Vision::Manager::GetShader("Basic").SetIntArrayInit("u_Textures", true);
 
     Vision::Manager::Print();
 
-    glm::vec3 BG(0.53f, 0.81f, 0.94f);
-    Vision::Manager::GetShader("Basic").SetVec3f("u_DirLight.color", BG, true);
-    Vision::Manager::GetShader("Basic").SetInt("LightNum", 12, true);
+    //Vision::Manager::GetShader("Basic").SetVec3f("u_DirLight.color", BG, true);
+    //Vision::Manager::GetShader("Basic").SetInt("LightNum", 12, true);
 
     Vision::Framebuffer::Init();
     Vision::Renderbuffer renderbuffer = Vision::Renderbuffer();
@@ -103,14 +108,6 @@ void Main3D() {
     AddLight(10, {0.0f, 1.0f, 11.0f});
     AddLight(11, {6.0f, 1.0f, 11.0f});
 
-    
-/*
-    Vision::Manager::GetShader("Def").Use();
-    Vision::Manager::GetShader("Def").SetInt("gPosition", 0);
-    Vision::Manager::GetShader("Def").SetInt("gNormal", 1);
-    Vision::Manager::GetShader("Def").SetInt("gAlbedoSpec", 2);
-*/
-
     std::time_t time;
     time = std::time(NULL);
     tm* localTime = localtime(&time);
@@ -140,7 +137,7 @@ void Main3D() {
         Vision::Framebuffer::Bind();
         glEnable(GL_DEPTH_TEST);
 
-        Vision::Renderer::Clear(BG);
+        Vision::Renderer::Clear(glm::vec3(0.0f));
         glm::mat4 mvp = camera.getProjMat() * camera.getViewMat();
 
         lightPos.x = cos(glfwGetTime()) * 2.0f;
@@ -148,19 +145,14 @@ void Main3D() {
         lightPos.y = sin(glfwGetTime()*1.5f) + 1.0f;
 
         
-        Vision::Manager::GetShader("Basic").SetVec3f("u_DirLight.dir", {-0.75f, -1.0f, -0.75f}, true);
-        Vision::Manager::GetShader("Basic").SetVec3f("u_viewPos", camera.getPos(), true);
+        //Vision::Manager::GetShader("Basic").SetVec3f("u_DirLight.dir", {-0.75f, -1.0f, -0.75f}, true);
+        //Vision::Manager::GetShader("Basic").SetVec3f("u_viewPos", camera.getPos(), true);
         
         camera.Controls();
 
-        Vision::Manager::GetShader("Basic").SetMat4f("u_PV", mvp);
+        Vision::Manager::GetShader("Basic").SetMat4f("u_PV", mvp, true);
         Vision::Manager::GetShader("Basic").SetMat4f("u_M", glm::mat4(1.0f));
 
-        
-        
-
-        
-        
 
         Vision::Renderer::StartBatch();
 
@@ -179,7 +171,7 @@ void Main3D() {
         Vision::Renderer::DrawQuad({0, 0.0f, -0.5f}, {0,180,0}, {1,1}, {0,0}, "Lamp", Mat);
         Vision::Renderer::DrawQuad({0, 0.5f, 0}, {-90,0,0}, {1,1}, {0,0}, "Lamp", Mat);
         
-        //Vision::Renderer::DrawQuad(lightPos, {0,0,0}, {0.2f,0.2f}, glm::vec4(1.0f));
+        Vision::Renderer::DrawQuad(lightPos, {0,0,0}, {0.2f,0.2f}, glm::vec4(1.0f));
 
         Vision::Renderer::DrawQuad({0.0f, -1.0f, 0.0f}, {-90, 0, 0}, {20, 30}, {0,0}, "Grass", GrassMat);
         Vision::Renderer::DrawQuad({0.0f, 3.0f, 0.0f}, {90, 0, 0}, {20, 30}, {0,0}, "Grass", GrassMat);
@@ -192,9 +184,19 @@ void Main3D() {
         Vision::Renderer::Flush();
 
         Vision::Framebuffer::UnBind();
+        Vision::Renderer::Clear(BG);
         glDisable(GL_DEPTH_TEST);
         Vision::Manager::GetShader("Screen").Use();
+        Vision::Manager::GetShader("Screen").SetVec3f("u_DirLight.dir", {-0.75f, -1.0f, -0.75f});
+        Vision::Manager::GetShader("Screen").SetVec3f("u_viewPos", camera.getPos());
+        Vision::Manager::GetShader("Screen").SetVec3f("u_PointLights[0].pos", lightPos);
+
         glBindVertexArray(quadVAO);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, Vision::Framebuffer::gPosition);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, Vision::Framebuffer::gNormal);
+        glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, Vision::Framebuffer::gColorSpec);
         glDrawArrays(GL_TRIANGLES, 0, 6);
         
