@@ -1,5 +1,7 @@
 #include "Renderer.hpp"
 #include "Manager.hpp"
+#include "Framebuffer.hpp"
+#include "Camera.hpp"
 
 
 void GLAPIENTRY Vision::errorOccurredGL(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam) {
@@ -107,6 +109,13 @@ void Renderer::EndBatch() {
 }
 
 void Renderer::Flush() {
+    /*Framebuffer::Bind();
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    Vision::Manager::GetShader("Gbuff").Use();
+    Vision::Manager::GetShader("Gbuff").SetMat4f("projection", Camera::getProjMat());
+    Vision::Manager::GetShader("Gbuff").SetMat4f("view", Camera::getViewMat());
+    */
+
     for (uint32_t i = 0; i < Data.TexSlotIndex; i++)
         glBindTextureUnit(i, Data.TextureSlots[i]);
 

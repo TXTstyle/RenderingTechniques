@@ -27,7 +27,7 @@ namespace Vision {
         static TextureTileMap GetTileMap(std::string name);
         // Clears all loaded data
         static void Clear();
-
+        static void Print();
     private:
         Manager();
         // Loads a shader file

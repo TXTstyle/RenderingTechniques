@@ -12,6 +12,13 @@ std::map<std::string, Texture> Manager::Textures;
 std::map<std::string, TextureTileMap>  Manager::TileMaps;
 std::map<std::string, Shader>  Manager::Shaders;
 
+void Manager::Print() {
+    std::cout << "Manager Data: " << std::endl;
+    std::cout << '\t' << "Textures amount: " << Textures.size() << std::endl;
+    std::cout << '\t' << "Shaders amount: " << Shaders.size() << std::endl;
+    std::cout << '\t' << "TileMaps amount: " << TileMaps.size() << '\n' << std::endl;
+}
+
 Shader Manager::LoadShader(const char* vShaderFile, const char* fShaderFile, const char* gShaderFile, std::string name) {
     Shaders[name] = loadShaderFromFile(vShaderFile, fShaderFile, gShaderFile);
     return Shaders[name];

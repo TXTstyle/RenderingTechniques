@@ -18,21 +18,21 @@ namespace Vision {
         bool firstMouse = true;
         float sensitivity = 0.075f;
 
-        glm::vec3 camPos = glm::vec3(0.0f, 0.0f, 1.0f);
+        glm::vec3 camPos = glm::vec3(0.0f, 0.0f, 3.0f);
         glm::vec3 camFront = glm::vec3(0.0f,  0.0f, 1.0f);
         glm::vec3 camUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
         float deltaTime;
         float lastFrame;
 
-        glm::mat4 projMat;
-        glm::mat4 viewMat;
+        static glm::mat4 projMat;
+        static glm::mat4 viewMat;
     public:
         Camera(const glm::vec2 p_clip, float p_fov, float p_camSpeed);
         ~Camera();
 
-        glm::mat4& getProjMat();
-        glm::mat4& getViewMat();
+        static glm::mat4& getProjMat();
+        static glm::mat4& getViewMat();
         glm::vec3& getPos();
 
         void Controls();

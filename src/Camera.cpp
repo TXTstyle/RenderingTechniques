@@ -9,6 +9,9 @@
 
 using namespace Vision;
 
+glm::mat4 Camera::projMat;
+glm::mat4 Camera::viewMat;
+
 Camera::Camera(const glm::vec2 p_clip, float p_fov, float p_camSpeed)
 : camClip(p_clip), camSpeed(p_camSpeed),  camFov(p_fov) {
     projMat = glm::perspective(glm::radians(camFov), Vision::Renderer::windowSize.x/Vision::Renderer::windowSize.y, camClip.x, camClip.y);

@@ -16,7 +16,7 @@ $(BIN)/%.o: $(SRC)/%.cpp
 	$(CXX) -c -o $@ $< $(FLAGS) -I$(INCLUDE)
 
 $(BIN)/$(EXE): $(OBJ)
-	$(CXX) $(FLAGS) -I$(INCLUDE) -o $@ $^ $(LIBS)
+	$(CXX) $(FLAGS) -I$(INCLUDE) -g -o $@ $^ $(LIBS) -fuse-ld=mold
 
 
 run: $(BIN)/$(EXE)

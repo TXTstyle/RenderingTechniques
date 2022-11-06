@@ -6,7 +6,7 @@ layout(location = 2) in vec3 normal;
 layout(location = 3) in vec4 color;
 layout(location = 4) in vec3 Mat;
 
-uniform mat4 u_MVP;
+uniform mat4 u_PV;
 
 out vec2 v_TexCoord; 
 out vec4 v_Color;
@@ -24,5 +24,5 @@ void main() {
     v_TexCoord = texCoord.xy;
     v_Mat = Mat;
     v_Size = texCoord.zw;
-    gl_Position =  u_MVP * vec4(position, 1.0);
+    gl_Position =  u_PV * vec4(position, 1.0);
 }
