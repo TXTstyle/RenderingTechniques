@@ -60,7 +60,7 @@ void Main3D() {
     //Vision::Manager::LoadShader("res/shaders/Def.vert", "res/shaders/Def.frag", nullptr, "Def");
     
     glm::vec3 BG(0.53f, 0.81f, 0.94f);
-    int LightNum = 168;
+    int LightNum = 204;
     Vision::Manager::LoadShader("res/shaders/Screen.vert", "res/shaders/Screen.frag", nullptr, "Screen");
 
     Vision::Manager::LoadTileMap("res/textures/Lamp_tile_texture.png", false, {2, 1}, "Lamp");
@@ -69,7 +69,7 @@ void Main3D() {
     Vision::Manager::GetShader("Screen").SetInt("gNormal", 1);
     Vision::Manager::GetShader("Screen").SetInt("gAlbedoSpec", 2);
     Vision::Manager::GetShader("Screen").SetVec3f("u_DirLight.color", {1.0f, 1.0f, 1.0f}, true);
-    Vision::Manager::GetShader("Screen").SetInt("LightNum", LightNum, true);
+    //Vision::Manager::GetShader("Screen").SetInt("LightNum", LightNum, true);
     
     Vision::Manager::GetShader("Basic").SetIntArrayInit("u_Textures", true);
 
@@ -265,6 +265,42 @@ void Main3D() {
         AddLight(165,{-6.0f,  4.75f,  11.0f});
         AddLight(166, {0.0f,  4.75f,  11.0f});
         AddLight(167, {6.0f,  4.75f,  11.0f});
+       AddLight(168,{-6.0f,  -2.25f, -3.5f});
+       AddLight(169, {0.0f,  -2.25f, -3.5f});
+       AddLight(170, {6.0f,  -2.25f, -3.5f});
+       AddLight(171,{-6.0f,  -2.25f,  3.5f});
+       AddLight(172, {0.0f,  -2.25f,  3.5f});
+       AddLight(173, {6.0f,  -2.25f,  3.5f});
+       AddLight(174,{-6.0f,  -2.25f, -11.0f});
+       AddLight(175, {0.0f,  -2.25f, -11.0f});
+       AddLight(176, {6.0f,  -2.25f, -11.0f});
+       AddLight(177,{-6.0f,  -2.25f,  11.0f});
+       AddLight(178, {0.0f,  -2.25f,  11.0f});
+       AddLight(179, {6.0f,  -2.25f,  11.0f});
+        AddLight(180,{-6.0f,  -1.25f, -3.5f});
+        AddLight(181, {0.0f,  -1.25f, -3.5f});
+        AddLight(182, {6.0f,  -1.25f, -3.5f});
+        AddLight(183,{-6.0f,  -1.25f,  3.5f});
+        AddLight(184, {0.0f,  -1.25f,  3.5f});
+        AddLight(185, {6.0f,  -1.25f,  3.5f});
+        AddLight(186,{-6.0f,  -1.25f, -11.0f});
+        AddLight(187, {0.0f,  -1.25f, -11.0f});
+        AddLight(188, {6.0f,  -1.25f, -11.0f});
+        AddLight(189,{-6.0f,  -1.25f,  11.0f});
+        AddLight(190, {0.0f,  -1.25f,  11.0f});
+        AddLight(191, {6.0f,  -1.25f,  11.0f});
+       AddLight(192,{-6.0f,  -0.25f, -3.5f});
+       AddLight(193, {0.0f,  -0.25f, -3.5f});
+       AddLight(194, {6.0f,  -0.25f, -3.5f});
+       AddLight(195,{-6.0f,  -0.25f,  3.5f});
+       AddLight(196, {0.0f,  -0.25f,  3.5f});
+       AddLight(197, {6.0f,  -0.25f,  3.5f});
+       AddLight(198,{-6.0f,  -0.25f, -11.0f});
+       AddLight(199, {0.0f,  -0.25f, -11.0f});
+       AddLight(200, {6.0f,  -0.25f, -11.0f});
+       AddLight(201,{-6.0f,  -0.25f,  11.0f});
+       AddLight(202, {0.0f,  -0.25f,  11.0f});
+       AddLight(203, {6.0f,  -0.25f,  11.0f});
     }
     
     std::time_t time;

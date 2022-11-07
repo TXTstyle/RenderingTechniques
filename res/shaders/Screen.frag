@@ -23,9 +23,9 @@ struct PointLight {
 
 uniform vec3 u_viewPos;
 uniform DirLight u_DirLight;
-uniform PointLight u_PointLights[168];
+uniform PointLight u_PointLights[204];
 
-uniform int LightNum;
+//uniform int LightNum;
 
 const float ambStr = 0.2;
 
@@ -79,7 +79,7 @@ void main()
     vec3 result = texColor * ambStr;
     //result += CalcDirLight(u_DirLight, norm, viewDir, texColor.rgb, specStr, MatZ);
     //result += CalcPointLight(u_PointLights[0], norm, FragPos, viewDir, texColor.rgb, specStr, MatZ);
-    for(int i = 0; i < LightNum; i++)
+    for(int i = 0; i < 204; i++)
         result += CalcPointLight(u_PointLights[i], norm, FragPos, viewDir, texColor.rgb, specStr, MatZ);
     
     
