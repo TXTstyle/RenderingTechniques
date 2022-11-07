@@ -60,7 +60,7 @@ void Main3D() {
     //Vision::Manager::LoadShader("res/shaders/Def.vert", "res/shaders/Def.frag", nullptr, "Def");
     
     glm::vec3 BG(0.53f, 0.81f, 0.94f);
-    int LightNum = 204;
+    int LightNum = 198;
     Vision::Manager::LoadShader("res/shaders/Screen.vert", "res/shaders/Screen.frag", nullptr, "Screen");
 
     Vision::Manager::LoadTileMap("res/textures/Lamp_tile_texture.png", false, {2, 1}, "Lamp");
