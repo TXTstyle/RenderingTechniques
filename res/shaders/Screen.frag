@@ -23,7 +23,7 @@ struct PointLight {
 
 uniform vec3 u_viewPos;
 uniform DirLight u_DirLight;
-uniform PointLight u_PointLights[64];
+uniform PointLight u_PointLights[72];
 
 uniform int LightNum;
 
