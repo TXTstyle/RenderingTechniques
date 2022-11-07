@@ -7,17 +7,18 @@ layout(location = 3) in vec4 color;
 layout(location = 4) in vec3 Mat;
 
 uniform mat4 u_PV;
+uniform mat4 u_M;
 
 out vec2 v_TexCoord; 
 out vec4 v_Color;
 flat out vec3 v_Mat;
 
-out vec3 v_FragPos;
+out vec4 v_FragPos;
 out vec3 v_Normal;
 flat out vec2 v_Size;
 
 void main() {
-    v_FragPos = position;
+    v_FragPos = u_M * vec4(position, 1.0);
     v_Normal = normal;
 
     v_Color = color;

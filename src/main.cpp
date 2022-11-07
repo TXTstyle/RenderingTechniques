@@ -60,6 +60,7 @@ void Main3D() {
     //Vision::Manager::LoadShader("res/shaders/Def.vert", "res/shaders/Def.frag", nullptr, "Def");
     
     glm::vec3 BG(0.53f, 0.81f, 0.94f);
+    int LightNum = 32;
     Vision::Manager::LoadShader("res/shaders/Screen.vert", "res/shaders/Screen.frag", nullptr, "Screen");
 
     Vision::Manager::LoadTileMap("res/textures/Lamp_tile_texture.png", false, {2, 1}, "Lamp");
@@ -68,11 +69,11 @@ void Main3D() {
     Vision::Manager::GetShader("Screen").SetInt("gNormal", 1);
     Vision::Manager::GetShader("Screen").SetInt("gAlbedoSpec", 2);
     Vision::Manager::GetShader("Screen").SetVec3f("u_DirLight.color", {1.0f, 1.0f, 1.0f}, true);
-    Vision::Manager::GetShader("Screen").SetInt("LightNum", 12, true);
+    Vision::Manager::GetShader("Screen").SetInt("LightNum", LightNum, true);
     
     Vision::Manager::GetShader("Basic").SetIntArrayInit("u_Textures", true);
 
-    Vision::Manager::Print();
+    //Vision::Manager::Print();
 
     //Vision::Manager::GetShader("Basic").SetVec3f("u_DirLight.color", BG, true);
     //Vision::Manager::GetShader("Basic").SetInt("LightNum", 12, true);
@@ -87,27 +88,53 @@ void Main3D() {
 
     glm::vec3 lightPos(0.0f);
     lightPos.y = 0.0f;
-    Material Mat(Vision::Manager::GetTileMap("Lamp").GetTile(), 128.0f);
-    Material GrassMat(Vision::Manager::GetTileMap("Grass").GetTile(), 32.0f);
+    Material Mat(Vision::Manager::GetTileMap("Lamp").GetTile(), 64.0f);
+    Material GrassMat(Vision::Manager::GetTileMap("Grass").GetTile(), 16.0f);
 
     //std::cout << Vision::Manager::GetTexture("Grass").GetID() << std::endl;
     //std::cout << Vision::Manager::GetTileMap("Lamp").GetID() << std::endl;
     float frames = 0;
     double lastFrame = glfwGetTime();
-
-    AddLight(0, {-6.0f, 1.0f, -3.5f});
-    AddLight(1, {0.0f, 1.0f, -3.5f});
-    AddLight(2, {6.0f, 1.0f, -3.5f});
-    AddLight(3, {-6.0f, 1.0f, 3.5f});
-    AddLight(4, {0.0f, 1.0f, 3.5f});
-    AddLight(5, {6.0f, 1.0f, 3.5f});
-    AddLight(6, {-6.0f, 1.0f,-11.0f});
-    AddLight(7, {0.0f, 1.0f, -11.0f});
-    AddLight(8, {6.0f, 1.0f, -11.0f});
-    AddLight(9, {-6.0f, 1.0f, 11.0f});
-    AddLight(10, {0.0f, 1.0f, 11.0f});
-    AddLight(11, {6.0f, 1.0f, 11.0f});
-
+    
+    {
+        AddLight(0, {-6.0f,-2.0f, -3.5f});
+        AddLight(1,  {0.0f,-2.0f, -3.5f});
+        AddLight(2,  {6.0f,-2.0f, -3.5f});
+        AddLight(3, {-6.0f,-2.0f,  3.5f});
+        AddLight(4,  {0.0f,-2.0f,  3.5f});
+        AddLight(5,  {6.0f,-2.0f,  3.5f});
+        AddLight(6, {-6.0f,-2.0f, -11.0f});
+        AddLight(7,  {0.0f,-2.0f, -11.0f});
+        AddLight(8,  {6.0f,-2.0f, -11.0f});
+        AddLight(9, {-6.0f,-2.0f,  11.0f});
+        AddLight(10, {0.0f,-2.0f,  11.0f});
+        AddLight(11, {6.0f,-2.0f,  11.0f});
+         AddLight(12,{-6.0f, 0.0f, -3.5f});
+         AddLight(13, {0.0f, 0.0f, -3.5f});
+         AddLight(14, {6.0f, 0.0f, -3.5f});
+         AddLight(15,{-6.0f, 0.0f,  3.5f});
+         AddLight(16, {0.0f, 0.0f,  3.5f});
+         AddLight(17, {6.0f, 0.0f,  3.5f});
+         AddLight(18,{-6.0f, 0.0f, -11.0f});
+         AddLight(19, {0.0f, 0.0f, -11.0f});
+         AddLight(20, {6.0f, 0.0f, -11.0f});
+         AddLight(21,{-6.0f, 0.0f,  11.0f});
+         AddLight(22, {0.0f, 0.0f,  11.0f});
+         AddLight(23, {6.0f, 0.0f,  11.0f});
+        AddLight(24,{-6.0f, 2.0f, -3.5f});
+        AddLight(25, {0.0f, 2.0f, -3.5f});
+        AddLight(26, {6.0f, 2.0f, -3.5f});
+        AddLight(27,{-6.0f, 2.0f,  3.5f});
+        AddLight(28, {0.0f, 2.0f,  3.5f});
+        AddLight(29, {6.0f, 2.0f,  3.5f});
+        AddLight(30,{-6.0f, 2.0f, -11.0f});
+        AddLight(31, {0.0f, 2.0f, -11.0f});
+        AddLight(32, {6.0f, 2.0f, -11.0f});
+        AddLight(33,{-6.0f, 2.0f,  11.0f});
+        AddLight(34, {0.0f, 2.0f,  11.0f});
+        AddLight(35, {6.0f, 2.0f,  11.0f});
+    }
+    
     std::time_t time;
     time = std::time(NULL);
     tm* localTime = localtime(&time);
@@ -115,8 +142,8 @@ void Main3D() {
     std::stringstream ss;
     ss << time << ".csv";
     std::string fileName = ss.str();
-    std::ofstream outputFile("file.csv");
-    outputFile << "type,time,frames" << std::endl;
+    std::ofstream outputFile(fileName);
+    outputFile << "type,time,frames, nrLights" << std::endl;
 
     Vision::Framebuffer::UnBind();
 
@@ -127,7 +154,7 @@ void Main3D() {
         if(currentFrame - lastFrame >= 1.0f) {
             double time = 1000.0/(double)frames;
             std::stringstream ss;
-            ss << "Def,"<< time << "," << frames;
+            ss << "Def,"<< time << "," << frames << "," << LightNum;
             Vision::Renderer::SetWindowTitle(ss.str());
             outputFile << ss.str() << std::endl;
             frames = 0;
@@ -140,9 +167,11 @@ void Main3D() {
         Vision::Renderer::Clear(glm::vec3(0.0f));
         glm::mat4 mvp = camera.getProjMat() * camera.getViewMat();
 
-        lightPos.x = cos(glfwGetTime()) * 2.0f;
-        lightPos.z = sin(glfwGetTime()) * 2.0f;
-        lightPos.y = sin(glfwGetTime()*1.5f) + 1.0f;
+        //lightPos.x = cos(glfwGetTime()) * 2.0f;
+        //lightPos.z = sin(glfwGetTime()) * 2.0f;
+        //lightPos.y = sin(glfwGetTime()*1.5f) + 1.0f;
+
+        lightPos = {0, 1, glfwGetTime()*2-15.0f};
 
         
         //Vision::Manager::GetShader("Basic").SetVec3f("u_DirLight.dir", {-0.75f, -1.0f, -0.75f}, true);
@@ -171,14 +200,14 @@ void Main3D() {
         Vision::Renderer::DrawQuad({0, 0.0f, -0.5f}, {0,180,0}, {1,1}, {0,0}, "Lamp", Mat);
         Vision::Renderer::DrawQuad({0, 0.5f, 0}, {-90,0,0}, {1,1}, {0,0}, "Lamp", Mat);
         
-        Vision::Renderer::DrawQuad(lightPos, {0,0,0}, {0.2f,0.2f}, glm::vec4(1.0f));
+        //Vision::Renderer::DrawQuad(lightPos, {0,0,0}, {0.2f,0.2f}, glm::vec4(1.0f));
 
-        Vision::Renderer::DrawQuad({0.0f, -1.0f, 0.0f}, {-90, 0, 0}, {20, 30}, {0,0}, "Grass", GrassMat);
-        Vision::Renderer::DrawQuad({0.0f, 3.0f, 0.0f}, {90, 0, 0}, {20, 30}, {0,0}, "Grass", GrassMat);
-        Vision::Renderer::DrawQuad({0.0f, 1.0f, 15.0f}, {0, -180, 0}, {20, 4}, {0,0}, "Grass", GrassMat);
-        Vision::Renderer::DrawQuad({0.0f, 1.0f, -15.0f}, {0, 0, 0}, {20, 4}, {0,0}, "Grass", GrassMat);
-        Vision::Renderer::DrawQuad({-10.0f, 1.0f, 0.0f}, {0, 90, 0}, {30, 4}, {0,0}, "Grass", GrassMat);
-        Vision::Renderer::DrawQuad({10.0f, 1.0f, 0.0f}, {0, -90, 0}, {30, 4}, {0,0}, "Grass", GrassMat);
+        Vision::Renderer::DrawQuad({0.0f, -3.0f, 0.0f}, {-90, 0, 0}, {20, 30}, {0,0}, "Grass", GrassMat);
+        Vision::Renderer::DrawQuad({0.0f, 5.0f, 0.0f}, {90, 0, 0}, {20, 30}, {0,0}, "Grass", GrassMat);
+        Vision::Renderer::DrawQuad({0.0f, 1.0f, 15.0f}, {0, -180, 0}, {20, 8}, {0,0}, "Grass", GrassMat);
+        Vision::Renderer::DrawQuad({0.0f, 1.0f, -15.0f}, {0, 0, 0}, {20, 8}, {0,0}, "Grass", GrassMat);
+        Vision::Renderer::DrawQuad({-10.0f, 1.0f, 0.0f}, {0, 90, 0}, {30, 8}, {0,0}, "Grass", GrassMat);
+        Vision::Renderer::DrawQuad({10.0f, 1.0f, 0.0f}, {0, -90, 0}, {30, 8}, {0,0}, "Grass", GrassMat);
         
         Vision::Renderer::EndBatch();
         Vision::Renderer::Flush();
@@ -189,7 +218,7 @@ void Main3D() {
         Vision::Manager::GetShader("Screen").Use();
         Vision::Manager::GetShader("Screen").SetVec3f("u_DirLight.dir", {-0.75f, -1.0f, -0.75f});
         Vision::Manager::GetShader("Screen").SetVec3f("u_viewPos", camera.getPos());
-        Vision::Manager::GetShader("Screen").SetVec3f("u_PointLights[0].pos", lightPos);
+        //Vision::Manager::GetShader("Screen").SetVec3f("u_PointLights[0].pos", lightPos);
 
         glBindVertexArray(quadVAO);
         glActiveTexture(GL_TEXTURE0);

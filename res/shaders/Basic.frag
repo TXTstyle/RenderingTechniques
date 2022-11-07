@@ -9,7 +9,7 @@ in vec2 v_TexCoord;
 in vec4 v_Color;
 flat in vec3 v_Mat;
 
-in vec3 v_FragPos;
+in vec4 v_FragPos;
 in vec3 v_Normal;
 flat in vec2 v_Size;
 
@@ -36,7 +36,7 @@ void main() {
 
     //color = vec4(result, texColor.w);
     
-    pos = vec4(v_FragPos, v_Mat.z);
+    pos = vec4(v_FragPos);
     nrm = vec4(norm, specStr);
-    colSp = vec4(texColor.rgb, 1.0);
+    colSp = vec4(texColor.rgb, v_Mat.z);
 }

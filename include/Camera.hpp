@@ -18,7 +18,7 @@ namespace Vision {
         bool firstMouse = true;
         float sensitivity = 0.075f;
 
-        glm::vec3 camPos = glm::vec3(0.0f, 0.0f, 3.0f);
+        glm::vec3 camPos = glm::vec3(0.0f, 0.0f, 14.0f);
         glm::vec3 camFront = glm::vec3(0.0f,  0.0f, 1.0f);
         glm::vec3 camUp = glm::vec3(0.0f, 1.0f, 0.0f);
 

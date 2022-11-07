@@ -1,5 +1,5 @@
 CXX		:=	clang++
-FLAGS	:=	-Wall -Wextra -std=c++17 -fdelayed-template-parsing
+FLAGS	:=	-Wall -Wextra -std=c++17 -O2
 
 INCLUDE	:=	include
 SRC		:=	src
@@ -16,7 +16,7 @@ $(BIN)/%.o: $(SRC)/%.cpp
 	$(CXX) -c -o $@ $< $(FLAGS) -I$(INCLUDE)
 
 $(BIN)/$(EXE): $(OBJ)
-	$(CXX) $(FLAGS) -I$(INCLUDE) -g -o $@ $^ $(LIBS) -fuse-ld=mold
+	$(CXX) $(FLAGS) -I$(INCLUDE) -o $@ $^ $(LIBS) -fuse-ld=mold
 
 
 run: $(BIN)/$(EXE)
