@@ -60,7 +60,7 @@ void Main3D() {
     //Vision::Manager::LoadShader("res/shaders/Def.vert", "res/shaders/Def.frag", nullptr, "Def");
     
     glm::vec3 BG(0.53f, 0.81f, 0.94f);
-    int LightNum = 132;
+    int LightNum = 168;
     Vision::Manager::LoadShader("res/shaders/Screen.vert", "res/shaders/Screen.frag", nullptr, "Screen");
 
     Vision::Manager::LoadTileMap("res/textures/Lamp_tile_texture.png", false, {2, 1}, "Lamp");
@@ -229,6 +229,42 @@ void Main3D() {
        AddLight(129,{-6.0f,  4.0f,  11.0f});
        AddLight(130, {0.0f,  4.0f,  11.0f});
        AddLight(131, {6.0f,  4.0f,  11.0f});
+        AddLight(132,{-6.0f,  4.5f, -3.5f});
+        AddLight(133, {0.0f,  4.5f, -3.5f});
+        AddLight(134, {6.0f,  4.5f, -3.5f});
+        AddLight(135,{-6.0f,  4.5f,  3.5f});
+        AddLight(136, {0.0f,  4.5f,  3.5f});
+        AddLight(137, {6.0f,  4.5f,  3.5f});
+        AddLight(138,{-6.0f,  4.5f, -11.0f});
+        AddLight(139, {0.0f,  4.5f, -11.0f});
+        AddLight(140, {6.0f,  4.5f, -11.0f});
+        AddLight(141,{-6.0f,  4.5f,  11.0f});
+        AddLight(142, {0.0f,  4.5f,  11.0f});
+        AddLight(143, {6.0f,  4.5f,  11.0f});
+       AddLight(144,{-6.0f,  -2.0f, -3.5f});
+       AddLight(145, {0.0f,  -2.0f, -3.5f});
+       AddLight(146, {6.0f,  -2.0f, -3.5f});
+       AddLight(147,{-6.0f,  -2.0f,  3.5f});
+       AddLight(148, {0.0f,  -2.0f,  3.5f});
+       AddLight(149, {6.0f,  -2.0f,  3.5f});
+       AddLight(150,{-6.0f,  -2.0f, -11.0f});
+       AddLight(151, {0.0f,  -2.0f, -11.0f});
+       AddLight(152, {6.0f,  -2.0f, -11.0f});
+       AddLight(153,{-6.0f,  -2.0f,  11.0f});
+       AddLight(154, {0.0f,  -2.0f,  11.0f});
+       AddLight(155, {6.0f,  -2.0f,  11.0f});
+        AddLight(156,{-6.0f,  4.75f, -3.5f});
+        AddLight(157, {0.0f,  4.75f, -3.5f});
+        AddLight(158, {6.0f,  4.75f, -3.5f});
+        AddLight(159,{-6.0f,  4.75f,  3.5f});
+        AddLight(160, {0.0f,  4.75f,  3.5f});
+        AddLight(161, {6.0f,  4.75f,  3.5f});
+        AddLight(162,{-6.0f,  4.75f, -11.0f});
+        AddLight(163, {0.0f,  4.75f, -11.0f});
+        AddLight(164, {6.0f,  4.75f, -11.0f});
+        AddLight(165,{-6.0f,  4.75f,  11.0f});
+        AddLight(166, {0.0f,  4.75f,  11.0f});
+        AddLight(167, {6.0f,  4.75f,  11.0f});
     }
     
     std::time_t time;
